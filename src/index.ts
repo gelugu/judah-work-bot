@@ -82,6 +82,19 @@ bot.command("work", (ctx) => {
   ctx.reply("Start working");
 });
 
+bot.command("rest", (ctx) => {
+  const chatId = ctx.chat.id;
+
+  if (!users[chatId]) {
+    ctx.reply("U not working currently");
+
+    return;
+  }
+
+  users[chatId] = getWork();
+  ctx.reply("In progress...\nBut ofcourse U can rest");
+});
+
 bot.command("stop", (ctx) => {
   const chatId = ctx.chat.id;
 
