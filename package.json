@@ -4,7 +4,7 @@
   "description": "Work helper bot",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev -r dotenv/config src/index.ts",
     "build": "tsc",
     "deploy": "git push heroku main"
