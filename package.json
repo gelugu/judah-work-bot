@@ -16,7 +16,8 @@
   "author": "gelugu",
   "license": "ISC",
   "dependencies": {
-    "telegraf": "^4.5.2"
+    "telegraf": "^4.5.2",
+    "tsc": "^2.0.3"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",
