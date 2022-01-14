@@ -7,8 +7,10 @@
     "start": "tsc && node dist/index.js",
     "dev": "ts-node-dev -r dotenv/config src/index.ts",
     "build": "tsc",
-    "deploy": "git push heroku main"
+    "deploy": "git push heroku main",
+    "postinstall": "npm run tsc"
   },
+  "tsc": "tsc",
   "keywords": [
     "telegram",
     "bot"
