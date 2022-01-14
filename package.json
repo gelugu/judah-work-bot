@@ -1,0 +1,29 @@
+{
+  "name": "judah-bot",
+  "version": "0.1.0",
+  "description": "Work helper bot",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "dev": "ts-node-dev -r dotenv/config src/index.ts",
+    "build": "tsc",
+    "deploy": "git push heroku main"
+  },
+  "keywords": [
+    "telegram",
+    "bot"
+  ],
+  "author": "gelugu",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "dotenv": "^11.0.0",
+    "nodemon": "^2.0.15",
+    "ts-node-dev": "^1.1.8",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.4"
+  }
+}
