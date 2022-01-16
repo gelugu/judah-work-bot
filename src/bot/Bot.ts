@@ -3,102 +3,90 @@ import { Context, Markup, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 
 import { Work } from "../work/Wokr";
+import { Buttons } from "./Buttons";
 
 export class Bot {
   private bot: Telegraf<Context<Update>>;
   private users: object;
-  private buttons: object;
+  private buttons: Buttons;
 
   constructor(token: string = process.env.TOKEN) {
     this.bot = new Telegraf(token);
     this.users = {};
-    this.buttons = {
-      work: Markup.button.text("/work"),
-      rest: Markup.button.text("/rest"),
-      stop: Markup.button.text("/stop"),
-    };
+    this.buttons = new Buttons();
   }
 
   private start() {
     const message =
       "/work to start\n/rest to 10 minut timeout\n/stop to stop work";
 
-    const reply_markup = {
-      keyboard: [[this.buttons["work"]]],
-    };
+    const keyboard = Markup.inlineKeyboard([[this.buttons.work]])
 
-    this.bot.start((ctx) => ctx.reply(message, { reply_markup }));
+    this.bot.start((ctx) => ctx.reply(message, keyboard));
   }
 
-  private work() {
-    this.bot.command("work", (ctx) => {
-      const chatId = ctx.chat.id;
+  private async work(ctx) {
+    const chatId = ctx.chat.id;
 
-      const work = this.users[chatId] as Work;
+    const work = this.users[chatId] as Work;
 
-      if (work) {
-        let response = "U already working";
-        response += `\nSince: ${work.getDateString()}`;
-        response += "\nU can end session with /stop";
+    if (work) {
+      let response = "U already working";
+      response += `\nSince: ${work.getDateString()}`;
+      response += "\nU can end session with /stop";
 
-        ctx.reply(response);
+      await ctx.reply(response);
 
-        return;
-      }
+      return;
+    }
 
-      this.users[chatId] = new Work();
+    this.users[chatId] = new Work();
 
-      const reply_markup = {
-        keyboard: [[this.buttons["rest"], this.buttons["stop"]]],
-      };
+    const keyboard = Markup.inlineKeyboard([[this.buttons.rest, this.buttons.stop]])
 
-      ctx.reply("Start working", { reply_markup });
-    });
+    await ctx.reply("Start working", keyboard);
   }
 
-  private rest() {
-    this.bot.command("rest", (ctx) => {
-      const chatId = ctx.chat.id;
+  private rest(ctx) {
+    const chatId = ctx.chat.id;
 
-      if (!this.users[chatId]) {
-        ctx.reply("U not working currently");
+    if (!this.users[chatId]) {
+      ctx.reply("U not working currently");
 
-        return;
-      }
+      return;
+    }
 
-      ctx.reply("In progress...\nBut ofcourse U can rest");
-    });
+    ctx.reply("In progress...\nBut ofcourse U can rest");
   }
 
-  private stop() {
-    this.bot.command("stop", (ctx) => {
-      const chatId = ctx.chat.id;
+  private stop(ctx) {
+    const chatId = ctx.chat.id;
 
-      if (!this.users[chatId]) {
-        ctx.reply("U not working now");
+    if (!this.users[chatId]) {
+      ctx.reply("U not working now");
 
-        return;
-      }
+      return;
+    }
 
-      const work = this.users[chatId] as Work;
-      delete this.users[chatId];
+    const work = this.users[chatId] as Work;
+    delete this.users[chatId];
 
-      let response = "Stop working\n";
-      response += `Work duration: ${work.getDateDiff()}`;
+    let response = "Stop working\n";
+    response += `Work duration: ${work.getDateDiff()}`;
 
-      const reply_markup = {
-        keyboard: [[this.buttons["work"]]],
-      };
+    const keyboard = Markup.inlineKeyboard([[this.buttons.work]])
 
-      ctx.reply(response, { reply_markup });
-    });
+    ctx.reply(response, keyboard);
   }
 
   public launch() {
     this.start();
-    this.work();
-    this.rest();
-    this.stop();
+
+    this.bot.action("work_button", (ctx) => this.work(ctx));
+
+    this.bot.action("rest_button", (ctx) => this.rest(ctx));
+
+    this.bot.action("stop_button", (ctx) => this.stop(ctx));
 
     this.bot.launch();
 
