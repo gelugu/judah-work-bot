@@ -1,9 +1,20 @@
-import { buffer } from "stream/consumers";
 import { Context, Markup, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 
 import { Work } from "../work/Wokr";
 import { Buttons } from "./Buttons";
+import {
+  alreadyWoringText,
+  restButtonId,
+  restNotWorkingText,
+  restText,
+  startText,
+  stopButtonId,
+  stopNotWorkingText,
+  stopText,
+  workButtonId,
+  workText,
+} from "../constants/text";
 
 export class Bot {
   private bot: Telegraf<Context<Update>>;
@@ -17,12 +28,9 @@ export class Bot {
   }
 
   private start() {
-    const message =
-      "/work to start\n/rest to 10 minut timeout\n/stop to stop work";
+    const keyboard = Markup.inlineKeyboard([[this.buttons.work]]);
 
-    const keyboard = Markup.inlineKeyboard([[this.buttons.work]])
-
-    this.bot.start((ctx) => ctx.reply(message, keyboard));
+    this.bot.start((ctx) => ctx.replyWithHTML(startText, keyboard));
   }
 
   private async work(ctx) {
@@ -31,39 +39,35 @@ export class Bot {
     const work = this.users[chatId] as Work;
 
     if (work) {
-      let response = "U already working";
-      response += `\nSince: ${work.getDateString()}`;
-      response += "\nU can end session with /stop";
-
-      await ctx.reply(response);
-
+      await ctx.replyWithHTML(alreadyWoringText(work.getDateString()));
       return;
     }
 
     this.users[chatId] = new Work();
 
-    const keyboard = Markup.inlineKeyboard([[this.buttons.rest, this.buttons.stop]])
+    const keyboard = Markup.inlineKeyboard([
+      [this.buttons.rest, this.buttons.stop],
+    ]);
 
-    await ctx.reply("Start working", keyboard);
+    await ctx.replyWithHTML(workText, keyboard);
   }
 
   private rest(ctx) {
     const chatId = ctx.chat.id;
 
     if (!this.users[chatId]) {
-      ctx.reply("U not working currently");
-
+      ctx.replyWithHTML(restNotWorkingText);
       return;
     }
 
-    ctx.reply("In progress...\nBut ofcourse U can rest");
+    ctx.replyWithHTML(restText);
   }
 
   private stop(ctx) {
     const chatId = ctx.chat.id;
 
     if (!this.users[chatId]) {
-      ctx.reply("U not working now");
+      ctx.replyWithHTML(stopNotWorkingText);
 
       return;
     }
@@ -71,22 +75,19 @@ export class Bot {
     const work = this.users[chatId] as Work;
     delete this.users[chatId];
 
-    let response = "Stop working\n";
-    response += `Work duration: ${work.getDateDiff()}`;
+    const keyboard = Markup.inlineKeyboard([[this.buttons.work]]);
 
-    const keyboard = Markup.inlineKeyboard([[this.buttons.work]])
-
-    ctx.reply(response, keyboard);
+    ctx.replyWithHTML(stopText(work.getDateDiff()), keyboard);
   }
 
   public launch() {
     this.start();
 
-    this.bot.action("work_button", (ctx) => this.work(ctx));
+    this.bot.action(workButtonId, (ctx) => this.work(ctx));
 
-    this.bot.action("rest_button", (ctx) => this.rest(ctx));
+    this.bot.action(restButtonId, (ctx) => this.rest(ctx));
 
-    this.bot.action("stop_button", (ctx) => this.stop(ctx));
+    this.bot.action(stopButtonId, (ctx) => this.stop(ctx));
 
     this.bot.launch();
 

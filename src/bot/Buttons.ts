@@ -1,7 +1,15 @@
 import { Markup } from "telegraf";
+import {
+  restButtonId,
+  restButtonText,
+  stopButtonId,
+  stopButtonText,
+  workButtonId,
+  workButtonText,
+} from "../constants/text";
 
 export class Buttons {
-  public work = Markup.button.callback("Start work session", "work_button");
-  public rest = Markup.button.callback("Take a timeout", "rest_button");
-  public stop = Markup.button.callback("Stop work session", "stop_button");
+  public work = Markup.button.callback(workButtonText, workButtonId);
+  public rest = Markup.button.callback(restButtonText, restButtonId);
+  public stop = Markup.button.callback(stopButtonText, stopButtonId);
 }
