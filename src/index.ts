@@ -1,3 +1,4 @@
+import micro from "micro";
 import { Telegraf } from "telegraf";
 import { Work } from "./work/Wokr";
 
@@ -65,9 +66,13 @@ process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 // To prevent Heroku fail on port biding
-require("https")
-  .createServer()
-  .listen(process.env.PORT || 5987)
-  .on("request", function (_, res) {
-    res.end("Hi");
+const port = process.env.PORT
+if (port) {
+  const server = micro(() => {
+    const botName = "@judahworkbot"
+    return `Join telegram bot <a href=\"tg.me/${botName}\">${botName}</a>`;
   });
+  server.listen(port, () => {
+    console.log(`Server started on ${port} (Heroku)`);
+  });
+}
