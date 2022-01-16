@@ -1,4 +1,5 @@
-import { Context, Telegraf } from "telegraf";
+import { buffer } from "stream/consumers";
+import { Context, Markup, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 
 import { Work } from "../work/Wokr";
@@ -6,17 +7,27 @@ import { Work } from "../work/Wokr";
 export class Bot {
   private bot: Telegraf<Context<Update>>;
   private users: object;
+  private buttons: object;
 
   constructor(token: string = process.env.TOKEN) {
     this.bot = new Telegraf(token);
     this.users = {};
+    this.buttons = {
+      work: Markup.button.text("/work"),
+      rest: Markup.button.text("/rest"),
+      stop: Markup.button.text("/stop"),
+    };
   }
 
   private start() {
     const message =
       "/work to start\n/rest to 10 minut timeout\n/stop to stop work";
 
-    this.bot.start((ctx) => ctx.reply(message));
+    const reply_markup = {
+      keyboard: [[this.buttons["work"]]],
+    };
+
+    this.bot.start((ctx) => ctx.reply(message, { reply_markup }));
   }
 
   private work() {
@@ -36,7 +47,12 @@ export class Bot {
       }
 
       this.users[chatId] = new Work();
-      ctx.reply("Start working");
+
+      const reply_markup = {
+        keyboard: [[this.buttons["rest"], this.buttons["stop"]]],
+      };
+
+      ctx.reply("Start working", { reply_markup });
     });
   }
 
@@ -70,7 +86,11 @@ export class Bot {
       let response = "Stop working\n";
       response += `Work duration: ${work.getDateDiff()}`;
 
-      ctx.reply(response);
+      const reply_markup = {
+        keyboard: [[this.buttons["work"]]],
+      };
+
+      ctx.reply(response, { reply_markup });
     });
   }
 
