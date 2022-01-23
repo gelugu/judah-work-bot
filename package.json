@@ -4,11 +4,12 @@
   "description": "Work helper bot",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "npm run build && node dist/index.js",
     "dev": "ts-node-dev -r dotenv/config src/index.ts",
     "debug": "NODE_OPTIONS='--inspect' npm run dev",
     "test": "nyc ./node_modules/.bin/_mocha 'test/**/*.test.ts'",
-    "build": "tsc -p ./tsconfig.json"
+    "build": "npm run tsc -p ./tsconfig.json",
+    "tsc": "tsc"
   },
   "keywords": [
     "telegram",
