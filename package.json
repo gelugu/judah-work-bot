@@ -8,8 +8,7 @@
     "dev": "ts-node-dev -r dotenv/config src/index.ts",
     "debug": "NODE_OPTIONS='--inspect' npm run dev",
     "test": "nyc ./node_modules/.bin/_mocha 'test/**/*.test.ts'",
-    "build": "npm run tsc -p ./tsconfig.json",
-    "tsc": "tsc"
+    "build": "./node_modules/typescript/bin/tsc -p ./tsconfig.json"
   },
   "keywords": [
     "telegram",
