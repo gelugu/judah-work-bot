@@ -1,4 +1,4 @@
-FROM node:fermium-buster-slim as Builder
+FROM node:14-alpine as build
 
 WORKDIR /app
 
