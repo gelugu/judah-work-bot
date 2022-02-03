@@ -23,7 +23,7 @@ jobs:
           directory: ./ci/ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
-            [bot-server]
+            [botserver]
             ${{ secrets.HOST }}
           options: |
             --extra-vars "token=${{ secrets.TOKEN }} api_key=${{ secrets.API_KEY }} auth_domain=${{ secrets.AUTH_DOMAIN }} db_url=${{ secrets.DB_URL }} project_id=${{ secrets.PROJECT_ID }} storage_bucket=${{ secrets.STORAGE_BUCKET }} messaging_sender_id=${{ secrets.MESSAGING_SENDER_ID }} app_id=${{ secrets.APP_ID }} measurment_id=${{ secrets.MEASURMENT_ID }}"
