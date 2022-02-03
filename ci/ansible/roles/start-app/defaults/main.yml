@@ -1,0 +1,2 @@
+container_name: judah-bot
+image_name: ghcr.io/gelugu/judah-bot

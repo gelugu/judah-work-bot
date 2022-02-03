@@ -1,0 +1,6 @@
+docker_packages:
+  - docker.x86_64
+  - docker-python.x86_64
+
+docker_registries:
+  - ghcr.io

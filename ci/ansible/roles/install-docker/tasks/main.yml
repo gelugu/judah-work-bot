@@ -1,0 +1,19 @@
+---
+
+- name: Install Docker
+  yum:
+    name: "{{ item }}"
+  loop: "{{ docker_packages }}"
+
+- name: Start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Log into docker registry
+  docker_login:
+    username: "{{ username }}"
+    password: "{{ password }}"
+    registry: "{{ item }}"
+  loop: "{{ docker_registries }}"
