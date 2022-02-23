@@ -9,9 +9,8 @@ on:
       - completed
 
 env:
-  DOCKER_REPO: docker.pkg.github.com
   CONTAINER_VERSION: $(cat package.json | jq ".version" | tr -d "\"")
-  CONTAINER_NAME: ${DOCKER_REPO?}/${{ github.actor }}/${{ github.event.repository.name }}:${CONTAINER_VERSION?}
+  CONTAINER_NAME: docker.pkg.github.com/${{ github.actor }}/${{ github.event.repository.name }}:${CONTAINER_VERSION?}
 
 jobs:
   build-and-push-image:
@@ -24,7 +23,7 @@ jobs:
       - name: Log in to the container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          registry: ghcr.io/gelugu
+          registry: ${DOCKER_REPO?}
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_CONNET }}
 
