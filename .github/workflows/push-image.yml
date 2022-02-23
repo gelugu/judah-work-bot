@@ -8,6 +8,11 @@ on:
     types: 
       - completed
 
+env:
+  DOCKER_REPO: docker.pkg.github.com
+  CONTAINER_VERSION: $(cat package.json | jq ".version" | tr -d "\"")
+  CONTAINER_NAME: ${DOCKER_REPO?}/${{ github.actor }}/${{ github.event.repository.name }}:${CONTAINER_VERSION?}
+
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -24,8 +29,8 @@ jobs:
           password: ${{ secrets.DOCKER_CONNET }}
 
       - name: Build container
-        run: docker build . -t ghcr.io/${{ github.actor }}/judah-bot:$(cat package.json | jq ".version" | tr -d "\"")
+        run: docker build . -t ${CONTAINER_NAME?}
 
       - name: Push container
-        run: docker push ghcr.io/${{ github.actor }}/judah-bot:$(cat package.json | jq ".version" | tr -d "\"")
+        run: docker push ${CONTAINER_NAME?}
 ...
