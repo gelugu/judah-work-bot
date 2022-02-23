@@ -9,7 +9,7 @@ on:
       - completed
 
 env:
-  CONTAINER_NAME: docker.pkg.github.com/${{ github.actor }}/${{ github.event.repository.name }}:$(cat package.json | jq ".version" | tr -d "\"")
+  CONTAINER_NAME: docker.pkg.github.com/${{ github.actor }}/${{ github.event.repository.name }}
 
 jobs:
   build-and-push-image:
