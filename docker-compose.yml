@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   bot:
-    image: judah-bot:latest
+    image: docker.pkg.github.com/gelugu/judah-bot:latest
     container_name: judah-bot
     build:
       context: .

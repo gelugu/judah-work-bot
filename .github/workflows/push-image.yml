@@ -27,8 +27,8 @@ jobs:
           password: ${{ secrets.DOCKER_CONNET }}
 
       - name: Build container
-        run: docker build . -t ${CONTAINER_NAME?}
+        run: docker-compose build
 
       - name: Push container
-        run: docker push ${CONTAINER_NAME?}
+        run: docker push docker.pkg.github.com/gelugu/judah-bot:latest
 ...
