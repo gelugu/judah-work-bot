@@ -19,7 +19,7 @@
   "dependencies": {
     "firebase": "^9.6.4",
     "micro": "^9.3.4",
-    "telegraf": "^4.5.2"
+    "telegraf": "^4.10.0"
   },
   "devDependencies": {
     "@testdeck/mocha": "^0.2.0",
