@@ -17,7 +17,7 @@
   "author": "gelugu",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^9.6.4",
+    "firebase": "^10.2.0",
     "micro": "^9.3.4",
     "telegraf": "^4.5.2"
   },
